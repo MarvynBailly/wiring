@@ -25,7 +25,7 @@ class Gadget {
         this.items.push(this.outputList[0]);
     }
 
-    checkItemClick(mx, my) {
+    checkWireStart(mx, my) {
         // actives when wring_mode is on
         for (let item of this.items) {
             if (this.item_clicked(item, mx, my)) {
@@ -36,8 +36,6 @@ class Gadget {
     
     wire_logic(item) {        
         if (!this.wiring_mode) {
-            console.log("Wiring mode active with item " + item.name);
-
             this.wiring_mode = true;
             this.wire_start = item;   
         }
@@ -72,7 +70,7 @@ class Gadget {
         }
     }
 
-    renderPotentialAnd(pos) {
+    renderPotentialItem(pos) {
         fill(255, 255, 0);
         circle(pos.x, pos.y, 30);
     }
@@ -83,36 +81,40 @@ class Gadget {
         sim.create_item_mode = false;
     }
 
+    placeNot(mx, my) { 
+        this.items.push(new notGate(mx, my));
+        this.create_item_mode = false;
+        sim.create_item_mode = false;
+    }
+
     run() {
         // wire loop
         for (let i = 0; i < this.wires.length; i++) {
             this.wires[i].render();
+            this.wires[i].update();
         }
         
+        // wire logic
+        if (this.wiring_mode) {
+            this.renderWire(this.wire_start, createVector(mouseX, mouseY));   
+        }
         
         // render loop
         for (let i = 0; i < this.items.length; i++) {
             this.items[i].render();
 
             // update and gates
-            if (this.items[i].name == "and") {
+            if (this.items[i].update != undefined) {
                 this.items[i].update();
             }
         }
 
-        // wire logic
-        if (this.wiring_mode) {
-            this.renderWire(this.wire_start, createVector(mouseX, mouseY));   
-        }
-        for (let i = 0; i < this.wires.length; i++) {
-            this.wires[i].update();
-        }
         
         // create item loop
         if (sim.create_item_mode) {
             if (mouseX > this.offset && mouseX < width - this.offset && mouseY > this.offset && mouseY < height - this.height - 2*this.offset) {
                 this.create_item_mode = true;
-                this.renderPotentialAnd(createVector(mouseX, mouseY));
+                this.renderPotentialItem(createVector(mouseX, mouseY));
             }
         }
 
@@ -146,3 +148,44 @@ class Input {
     }
 }
 
+class notGate {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = 40;
+        this.color = color(255, 255, 255);
+        this.name = "not";
+        this.state = false;
+        this.inputList = [];
+    }
+
+
+    addInput(input) {
+        if (this.inputList.length == 1) {
+            console.log("Max inputs reached");
+            return;
+        }
+        this.inputList.push(input);
+    }
+
+    update(){
+        if (this.inputList.length == 1) {
+            if (!this.inputList[0].state) {
+                this.state = true;
+            }else {
+                this.state = false;
+            }
+        }
+    }
+
+    render() {
+        stroke(0, 0, 0);
+        fill(this.color);
+        circle(this.x, this.y, this.size);
+        // add the name to the center of the circle
+        fill(0, 0, 0);
+        textSize(16);
+        textAlign(CENTER, CENTER);
+        text(this.name, this.x, this.y);
+    };
+}

@@ -8,6 +8,17 @@ class Output {
         this.color_on = color(0, 255, 0);
         this.color_off = color(255, 0, 0);
         this.state = false;
+        this.inputList = [];
+    }
+    
+    update(){
+        if (this.inputList.length == 1) {
+            if (this.inputList[0].state) {
+                this.state = true;
+            }else {
+                this.state = false;
+            }
+        }
     }
 
     addInput(input) {
@@ -15,8 +26,9 @@ class Output {
             console.log("Max inputs reached");
             return;
         }
+
         console.log("Input added to output: " + input.name);
-        // this.inputList.push(input);
+        this.inputList.push(input);
     }
 
 

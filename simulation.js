@@ -4,7 +4,9 @@ class Simulation {
         this.offset = offset;
         this.background_color = color(100, 100, 100);
         this.wiring_mode = false;
+        
         this.create_item_mode = false;
+        this.create_item_type = null 
 
         this.gadget = new Gadget(height, offset, "Test Gadget");
 
@@ -22,11 +24,15 @@ class Simulation {
     }
     
     setupButtons() {
+        let offset = 50;
         this.createWiring = createButton('Wire');
-        this.createWiring.position(20, height - this.height + 10);
+        this.createWiring.position(this.offset, height - this.height + 10);
 
         this.createAdd = createButton('And');
-        this.createAdd.position(70, height - this.height + 10);
+        this.createAdd.position(this.offset + 1*offset, height - this.height + 10);
+
+        this.createNot = createButton('Not');
+        this.createNot.position(this.offset + + 2*offset, height - this.height + 10);
     }
 
     runButtons() {
@@ -41,8 +47,15 @@ class Simulation {
         }
 
         this.createAdd.mousePressed(() => {
+            this.create_item_type = "and";
             this.create_item_mode = !this.create_item_mode;
         });
+
+        this.createNot.mousePressed(() => {
+            this.create_item_type = "not";
+            this.create_item_mode = !this.create_item_mode;
+        });
+
     }
 
     run() {
@@ -57,13 +70,7 @@ class Simulation {
 function mousePressed() {
     // wiring mode
     if (sim.wiring_mode){
-        // // once wiring mode is active, check for end value
-        // if (sim.gadget.wiring_mode) {
-
-        // }
-        // else{
-            sim.gadget.checkItemClick(mouseX, mouseY);
-        // }
+        sim.gadget.checkWireStart(mouseX, mouseY);
     }
     
     // create item mode
@@ -72,7 +79,14 @@ function mousePressed() {
 
 
         if (sim.gadget.create_item_mode) {
-            sim.gadget.placeAnd(mouseX, mouseY);
+            if(sim.create_item_type == "and"){
+                sim.gadget.placeAnd(mouseX, mouseY);
+            }
+            
+            else if(sim.create_item_type == "not"){
+                sim.gadget.placeNot(mouseX, mouseY);
+            }
+
         }
     }
 }
