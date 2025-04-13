@@ -29,10 +29,26 @@ class Gadget {
         // actives when wring_mode is on
         for (let item of this.items) {
             if (this.item_clicked(item, mx, my)) {
-                if (!this.wiring_mode) {
-                    this.createWire(mx, my); 
-                }                
+                this.wire_logic(item);
             }
+        }
+    }
+    
+    wire_logic(item) {        
+        if (!this.wiring_mode) {
+            this.wiring_mode = true;
+            this.wire_start = item;   
+        }
+        else{
+            let wire = new Wire(this.wire_start, item)
+            
+            this.wires.push(wire);
+
+
+            item.addInput(wire);
+                        
+            this.wiring_mode = false;
+            sim.wiring_mode = false;
         }
     }
 
@@ -41,34 +57,17 @@ class Gadget {
         return d < item.size / 2;
     }
 
-    createWire(mx, my) {
-        this.wire_start = createVector(mx, my); 
-        this.wiring_mode = true;        
-    }
-
-    checkInputClick(mx, my) {
-        for (let i = 0; i < this.inputList.length; i++) {
-            if (this.inputList[i].clicked(mx, my)) {
-                this.createWire(mx, my); 
-            }
-        }
-    }
-
-    checkInputClick(mx, my) {
-        for (let i = 0; i < this.inputList.length; i++) {
-            if (this.inputList[i].clicked(mx, my)) {
-                this.inputList[i].toggle(); 
-            }
-        }
-    }
-
     renderWire(start, end) {
         stroke(0, 0, 0);
         line(start.x, start.y, end.x, end.y);
     }
 
-    addItem(item) { 
-        this.create_item_mode = true;
+    toggleInputs(mx, my) {
+        for (let item of this.inputList) {
+            if (item.clicked(mx, my)) {
+                item.toggle();
+            }
+        }
     }
 
     renderPotentialAnd(pos) {
@@ -76,26 +75,45 @@ class Gadget {
         circle(pos.x, pos.y, 30);
     }
 
+    placeAnd(mx, my) { 
+        this.items.push(new andGate(mx, my));
+        this.create_item_mode = false;
+        sim.create_item_mode = false;
+    }
+
     run() {
-        // input loop 
-        for (let i = 0; i < this.inputList.length; i++) {
-            this.inputList[i].render();
+        // wire loop
+        for (let i = 0; i < this.wires.length; i++) {
+            this.wires[i].render();
         }
-        // output loop
-        for (let i = 0; i < this.outputList.length; i++) {
-            this.outputList[i].render();
+        
+        
+        // render loop
+        for (let i = 0; i < this.items.length; i++) {
+            this.items[i].render();
+
+            // update and gates
+            if (this.items[i].name == "and") {
+                this.items[i].update();
+            }
         }
+
         // wire logic
         if (this.wiring_mode) {
             this.renderWire(this.wire_start, createVector(mouseX, mouseY));   
         }
-
-        // item loop
-        if (this.create_item_mode) {
+        for (let i = 0; i < this.wires.length; i++) {
+            this.wires[i].update();
+        }
+        
+        // create item loop
+        if (sim.create_item_mode) {
             if (mouseX > this.offset && mouseX < width - this.offset && mouseY > this.offset && mouseY < height - this.height - 2*this.offset) {
+                this.create_item_mode = true;
                 this.renderPotentialAnd(createVector(mouseX, mouseY));
             }
         }
+
     }
 }
 
@@ -105,6 +123,7 @@ class Input {
         this.y = y;
         this.size = 30;
         this.state = false;
+        this.name = "input";
         this.color_on = color(0, 255, 0);
         this.color_off = color(255, 0, 0);
     }
@@ -119,6 +138,7 @@ class Input {
     }
 
     render() {
+        stroke(0, 0, 0);
         fill(this.state ? this.color_on : this.color_off);
         circle(this.x, this.y, this.size);
     }
@@ -130,26 +150,15 @@ class Output {
         this.y = y;
         this.size = 30;
         this.state = false;
+        this.name = "output";
         this.color_on = color(0, 255, 0);
         this.color_off = color(255, 0, 0);
     }
 
     render() {
+        stroke(0, 0, 0);
         fill(this.state ? this.color_on : this.color_off);
         circle(this.x, this.y, this.size);
     }
 }
 
-class andGate {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.size = 30;
-        this.color = color(255, 255, 0);
-    };
-
-    render() {
-        fill(this.color);
-        circle(this.x, this.y, this.size);
-    };
-}

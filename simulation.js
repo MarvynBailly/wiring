@@ -4,7 +4,7 @@ class Simulation {
         this.offset = offset;
         this.background_color = color(100, 100, 100);
         this.wiring_mode = false;
-
+        this.create_item_mode = false;
 
         this.gadget = new Gadget(height, offset, "Test Gadget");
 
@@ -12,6 +12,7 @@ class Simulation {
     }
 
     renderLayout() {
+        stroke(0,0,0);
         fill(180, 180, 180);
         rect(0, 0, width, height - this.height);
         fill(this.background_color);
@@ -40,7 +41,7 @@ class Simulation {
         }
 
         this.createAdd.mousePressed(() => {
-            this.gadget.addItem();
+            this.create_item_mode = !this.create_item_mode;
         });
     }
 
@@ -54,10 +55,24 @@ class Simulation {
 
 
 function mousePressed() {
+    // wiring mode
     if (sim.wiring_mode){
-        sim.gadget.checkItemClick(mouseX, mouseY);
+        // // once wiring mode is active, check for end value
+        // if (sim.gadget.wiring_mode) {
+
+        // }
+        // else{
+            sim.gadget.checkItemClick(mouseX, mouseY);
+        // }
     }
-    else {
-        sim.gadget.checkInputClick(mouseX, mouseY);
+    
+    // create item mode
+    else{
+        sim.gadget.toggleInputs(mouseX, mouseY);
+
+
+        if (sim.gadget.create_item_mode) {
+            sim.gadget.placeAnd(mouseX, mouseY);
+        }
     }
 }
