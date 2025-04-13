@@ -10,6 +10,8 @@ class Gadget {
         this.wiring_mode = false;
         this.wires = [];
 
+        this.create_item_mode = false;
+
         this.setupDefaultSetup();
     }
     
@@ -66,7 +68,12 @@ class Gadget {
     }
 
     addItem(item) { 
-        this.items.push(item);
+        this.create_item_mode = true;
+    }
+
+    renderPotentialAnd(pos) {
+        fill(255, 255, 0);
+        circle(pos.x, pos.y, 30);
     }
 
     run() {
@@ -81,6 +88,13 @@ class Gadget {
         // wire logic
         if (this.wiring_mode) {
             this.renderWire(this.wire_start, createVector(mouseX, mouseY));   
+        }
+
+        // item loop
+        if (this.create_item_mode) {
+            if (mouseX > this.offset && mouseX < width - this.offset && mouseY > this.offset && mouseY < height - this.height - 2*this.offset) {
+                this.renderPotentialAnd(createVector(mouseX, mouseY));
+            }
         }
     }
 }

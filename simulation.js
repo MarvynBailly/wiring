@@ -40,7 +40,7 @@ class Simulation {
         }
 
         this.createAdd.mousePressed(() => {
-            this.gadget.addItem(new And(this.offset, 400));
+            this.gadget.addItem();
         });
     }
 
