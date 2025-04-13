@@ -36,6 +36,8 @@ class Gadget {
     
     wire_logic(item) {        
         if (!this.wiring_mode) {
+            console.log("Wiring mode active with item " + item.name);
+
             this.wiring_mode = true;
             this.wire_start = item;   
         }
@@ -135,24 +137,6 @@ class Input {
 
     toggle() {
         this.state = !this.state;
-    }
-
-    render() {
-        stroke(0, 0, 0);
-        fill(this.state ? this.color_on : this.color_off);
-        circle(this.x, this.y, this.size);
-    }
-}
-
-class Output {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.size = 30;
-        this.state = false;
-        this.name = "output";
-        this.color_on = color(0, 255, 0);
-        this.color_off = color(255, 0, 0);
     }
 
     render() {
