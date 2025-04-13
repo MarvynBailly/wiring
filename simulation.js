@@ -23,6 +23,9 @@ class Simulation {
     setupButtons() {
         this.createWiring = createButton('Wire');
         this.createWiring.position(20, height - this.height + 10);
+
+        this.createAdd = createButton('And');
+        this.createAdd.position(70, height - this.height + 10);
     }
 
     runButtons() {
@@ -35,6 +38,10 @@ class Simulation {
             this.createWiring.style('background-color', '');
             this.createWiring.style('color', '');
         }
+
+        this.createAdd.mousePressed(() => {
+            this.gadget.addItem(new And(this.offset, 400));
+        });
     }
 
     run() {

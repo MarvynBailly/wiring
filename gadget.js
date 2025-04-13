@@ -17,7 +17,7 @@ class Gadget {
         this.inputList.push(new Input(this.offset, 200));
         this.items.push(this.inputList[0]);
         this.inputList.push(new Input(this.offset, 600));
-        this.items.push(this.inputList[1]);
+        this.items.push(this.inputList[1]); 
 
         this.outputList.push(new Output(width - this.offset, 400));
         this.items.push(this.outputList[0]);
@@ -63,6 +63,10 @@ class Gadget {
     renderWire(start, end) {
         stroke(0, 0, 0);
         line(start.x, start.y, end.x, end.y);
+    }
+
+    addItem(item) { 
+        this.items.push(item);
     }
 
     run() {
@@ -119,19 +123,6 @@ class Output {
     render() {
         fill(this.state ? this.color_on : this.color_off);
         circle(this.x, this.y, this.size);
-    }
-}
-
-class Wire { 
-    constructor(start, end) {
-        this.start = start;
-        this.end = end;
-        this.color = color(0, 0, 0);
-    }
-
-    render() {
-        stroke(this.color);
-        line(this.start.x, this.start.y, this.end.x, this.end.y);
     }
 }
 
