@@ -92,8 +92,15 @@ simplify(output, code){
 Not the cleanest but gets the trick done! Now clicking 'Create' for the `NAND` get gives `NOT[AND[input1,input0]]`. Wonderful. Now let's add it to a `.txt` containing functions. 
 
 ### Loading Gadget Format
+Okay I've added the logic to load the gadgets in. How it works is when the user presses the `Load` button, the simulation reads the `gadgets.txt` file and loads in the `(gadget_name, gadget_rule)` pair. The simulation also gives all the details to the current gadget module. Now the simulation also creates now buttons for the user to click. I've also added a new class called `CustonGadget` which takes in the custom name and custom rule. Now we need to write function that takes the rule and returns a `0` or `1`.
+
+![alt text](images/image-2.png)
 
 ### Running Gadget
+Let's create a function that updates the state of the custom gadget depending on its input values and the rule. 
+
+
+
 
 ## TODO
 Okay I'm leaving off at a point where I can click on a button that actives wiring mode. Once in wiring mode, the user can clikcon on itmes to begin a wire. The logic for this cascades from the simulation to the gadget. The next step would than be to:

@@ -13,6 +13,7 @@ class Simulation {
 
         this.gadget = new Gadget(height, offset, "Test Gadget");
 
+        this.loadGadgetData();
         this.setupButtons();
     }
 
@@ -161,7 +162,11 @@ function mousePressed() {
             else if(sim.create_item_type == "not"){
                 sim.gadget.placeNot(mouseX, mouseY);
             }
-
+            
+            // otherwise we are placing a custom gadget
+            else{
+                sim.gadget.placeCustomGadget(mouseX, mouseY, sim.create_item_type);
+            }
         }
     }
 }

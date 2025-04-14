@@ -123,6 +123,17 @@ class Gadget {
         sim.create_item_mode = false;
     }
 
+    placeCustomGadget(mx, my, gadget_name){
+        // use gadget_name to loop up the gadget in the gadget array
+        // save gadget rule
+        let gadget_rule = this.gadget_array.find(g => g.name == gadget_name).output;
+        let gadget = new CustomGadget(mx, my, gadget_name, gadget_rule);
+        this.items.push(gadget);
+
+        this.create_item_mode = false;
+        sim.create_item_mode = false;
+    }
+
     run() {
         // wire loop
         for (let i = 0; i < this.wires.length; i++) {
