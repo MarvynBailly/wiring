@@ -8,6 +8,7 @@ class andGate {
         this.state = false;
         
         this.inputList = [];
+        this.outputs = [];
     };
 
     addInput(input) {
@@ -17,6 +18,10 @@ class andGate {
         }
         
         this.inputList.push(input);
+    }
+
+    addOutput(wire) {
+        this.outputs.push(wire);
     }
 
 

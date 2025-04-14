@@ -1,13 +1,15 @@
 
 class Input {
-    constructor(x, y) {
+    constructor(x, y, id) {
         this.x = x;
         this.y = y;
         this.size = 30;
         this.state = false;
         this.name = "input";
+        this.id = id;
         this.color_on = color(0, 255, 0);
         this.color_off = color(255, 0, 0);
+        this.outputs = [];
     }
     
     clicked(mx, my) {
@@ -18,6 +20,11 @@ class Input {
     toggle() {
         this.state = !this.state;
     }
+    
+    addOutput(wire) {
+        this.outputs.push(wire);
+    }
+
 
     render() {
         stroke(0, 0, 0);

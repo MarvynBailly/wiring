@@ -1,0 +1,2 @@
+NAND NOT[AND[input1,input0]]
+OR NOT[AND[NOT[input1],NOT[input0]]]

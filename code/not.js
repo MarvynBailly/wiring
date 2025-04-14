@@ -7,6 +7,7 @@ class notGate {
         this.name = "not";
         this.state = false;
         this.inputList = [];
+        this.outputs = [];
     }
 
 
@@ -16,6 +17,10 @@ class notGate {
             return;
         }
         this.inputList.push(input);
+    }
+
+    addOutput(wire) {
+        this.outputs.push(wire);
     }
 
     update(){

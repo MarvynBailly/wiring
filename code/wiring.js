@@ -1,5 +1,5 @@
 class Wire { 
-    constructor(start, end) {
+    constructor(start, end, start_item, end_item) {
         this.start = start;
         this.end = end;
         this.color_off = color(0, 0, 0);

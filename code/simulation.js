@@ -8,10 +8,14 @@ class Simulation {
         this.create_item_mode = false;
         this.create_item_type = null 
 
+        this.gadgetData = [];
+        this.gadgetArray = [];
+
         this.gadget = new Gadget(height, offset, "Test Gadget");
 
         this.setupButtons();
     }
+
 
     renderLayout() {
         stroke(0,0,0);
@@ -23,19 +27,90 @@ class Simulation {
         rect(0, height - this.height, width, this.height);
     }
     
+
     setupButtons() {
-        let offset = 50;
+        let offset = 65;
+        
+        this.createCreate = createButton('Create');
+        this.createCreate.position(this.offset + 0*offset, height - this.height + 10);
+
         this.createWiring = createButton('Wire');
-        this.createWiring.position(this.offset, height - this.height + 10);
+        this.createWiring.position(this.offset + 1*offset, height - this.height + 10);
+
+        this.createLoad = createButton('Load');
+        this.createLoad.position(this.offset + 2*offset, height - this.height + 10);
 
         this.createAdd = createButton('And');
-        this.createAdd.position(this.offset + 1*offset, height - this.height + 10);
+        this.createAdd.position(this.offset + 3*offset, height - this.height + 10);
 
         this.createNot = createButton('Not');
-        this.createNot.position(this.offset + + 2*offset, height - this.height + 10);
+        this.createNot.position(this.offset + + 4*offset, height - this.height + 10);
     }
 
+
+    loadGadgetData() {
+        loadStrings("gadgets.txt", this.processGadgetData.bind(this));
+    }
+
+    processGadgetData(data) {
+        console.log("File loaded:", data);
+        this.gadgetData = [];  // reset in case we reload
+        sim.gadget.gadget_array = []; // reset the gadget array
+
+        for (let i = 0; i < data.length; i++) {
+            let line = data[i].trim().split(" ");
+            let name = line[0];
+            let output = line[1];
+            // console.log(name, output);
+
+            this.gadgetData.push({ name, output });
+        }
+
+        // OPTIONAL: Trigger anything now that data is ready
+        this.onGadgetsLoaded();
+    }
+
+    onGadgetsLoaded() {
+        console.log("Gadget data is ready!", this.gadgetData);
+
+        // create an array of buttons for each gadget
+        for (let i = 0; i < this.gadgetData.length; i++) {
+            let gadget = this.gadgetData[i];
+            let button = createButton(gadget.name);
+            button.position(this.offset + i * 65+5 * 65, height - this.height + 10);
+            // when mouse pressed, print name of the button
+            button.mousePressed(() => {
+                let name = button.html();
+                this.create_item_mode = !this.create_item_mode;
+                this.create_item_type = name;
+            });
+
+
+            // save the instructions to the gadget array
+            let data = {name : gadget.name, output: gadget.output};
+            sim.gadget.gadget_array.push(data);
+        }
+    }
+    
     runButtons() {
+
+        this.createCreate.mousePressed(() => {
+            // prompt the user for the name of the gadget
+            let name = prompt("Enter the name of the gadget:");
+            let output = sim.gadget.simplify(sim.gadget.outputList[0].inputList[0],"_");
+            // append the (name, output) to a text file gadgets.txt
+            let data = name + " " + output;
+            console.log(data);
+            // display data
+            alert(data);
+        });
+
+        this.createLoad.mousePressed(() => {
+            this.loadGadgetData();
+        
+        });
+
+
         this.createWiring.mousePressed(() => this.wiring_mode = !this.wiring_mode);
 
         if (this.wiring_mode) {
