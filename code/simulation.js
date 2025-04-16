@@ -88,6 +88,7 @@ class Simulation {
 
 
             // save the instructions to the gadget array
+            // don't save all of the gadgets, just the ones that we need.
             let data = {name : gadget.name, output: gadget.output};
             sim.gadget.gadget_array.push(data);
         }

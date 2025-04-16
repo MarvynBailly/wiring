@@ -25,35 +25,62 @@ class CustomGadget{
         this.outputs.push(wire);
     }
 
-    evaluateGlobalRule() {
+    evaluateRule() {
         if (this.inputList.length != 2) {
             return;
         }
 
-        let input0 = this.inputList[0].state;
-        let input1 = this.inputList[1].state;
-
-        this.evaluateLocalRule([input0, input1], this.rule);
-    }
-
-    evaluateLocalRule(inputs, rule) {
-        let name = rule.slice(0, 3);
-        let value = rule.slice(4, rule.length-1);
-        let inner_inputs = value.split(",");
-
-        let count = (rule.match(/\[/g) || []).length;
+        // replace 0 and 1 with true and false
+        let input0 = this.inputList[0].state == 1 ? true : false;
+        let input1 = this.inputList[1].state == 1 ? true : false;   
         
-        // console.log("rule: " + rule);
-        // console.log("name: " + name);
-        // console.log("value: " + value);
-        // console.log("inner_inputs: " + inner_inputs);
-        // console.log("Count: " + count);
-        
-        
+        // replace this.rule input0 and input1 with the actual values
+        let rule = this.rule.replace(/input0/g, input0).replace(/input1/g, input1);
+
+        // Recursively evaluate the expression
+        function parse(expr) {
+            // Evaluate NOT
+            expr = expr.replace(/NOT/g, (_, inner) => {
+                return !parse(inner);
+            });
+
+            // Evaluate AND
+            expr = expr.replace(/AND/g, (_, inner) => {
+                const parts = splitArgs(inner);
+                return parts.every(parse);
+            });
+
+            // Base case: just return the boolean
+            if (expr.trim() === 'true') return true;
+            if (expr.trim() === 'false') return false;
+
+            throw new Error("Invalid expression: " + expr);
+        }
+
+        // Split arguments on comma, but respect nested brackets
+        function splitArgs(s) {
+            let args = [], depth = 0, current = '';
+            for (let c of s) {
+                if (c === '[') depth++;
+                if (c === ']') depth--;
+                if (c === ',' && depth === 0) {
+                    args.push(current.trim());
+                    current = '';
+                } else {
+                    current += c;
+                }
+            }
+            if (current) args.push(current.trim());
+            return args;
+        }
+
+        let res = parse(rule);
+        console.log("Rule: " + rule);
+        console.log("Result: " + res);
     }
 
     update(){
-        this.evaluateGlobalRule();
+        this.evaluateRule();
     }
 
 
