@@ -97,13 +97,74 @@ Okay I've added the logic to load the gadgets in. How it works is when the user 
 ![alt text](images/image-2.png)
 
 ### Running Gadget
-Let's create a function that updates the state of the custom gadget depending on its input values and the rule. 
+Let's create a function that updates the state of the custom gadget depending on its input values and the rule. We will need to create another recursive function that loops through each argument until we get to the input values and the move back out, returning if the statement is true or false. And here is a function that does the trick:
+```
+function evaluateRule(exp, inputList) {
+    if (inputList.length != 2) {
+        return;
+    }
+
+    // replace 0 and 1 with true and false
+    let input0 = inputList[0] == 1 ? true : false;
+    let input1 = inputList[1] == 1 ? true : false;   
+    
+    // replace this.rule input0 and input1 with the actual values
+    let rule = exp.replace(/input0/g, input0).replace(/input1/g, input1);
+    console.log("Rule: " + rule);
+
+    // Recursively evaluate the expression
+    function parse(expr) {
+        // Evaluate NOT
+        if (expr.startsWith('NOT')) {
+            let inner = expr.slice(4, -1); // Remove NOT[ and ]
+            return !parse(inner);
+        }
+
+        // Evaluate AND
+        if (expr.startsWith('AND')) {
+            let inner = expr.slice(4, -1); // Remove AND[ and ]
+            let parts = splitArgs(inner);
+            return parts.every(parse);
+        }
+        // Base case: just return the boolean
+        if (expr.trim() === 'true') return true;
+        if (expr.trim() === 'false') return false;
+    }
+
+    // Split arguments on comma, but respect nested brackets
+    function splitArgs(s) {
+        let args = [], depth = 0, current = '';
+        for (let c of s) {
+            if (c === '[') depth++;
+            if (c === ']') depth--;
+            if (c === ',' && depth === 0) {
+                args.push(current.trim());
+                current = '';
+            } else {
+                current += c;
+            }
+        }
+        if (current) args.push(current.trim());
+        return args;
+    }
+
+    return parse(rule);
+}
+``` 
+The algorithm takes in the command and calls two subfunctions, `parse` and `splitArgs`. Parse takes in a command and checks the first three letters to see if it is `AND` OR `NOT`. If `NOT`, then take everything between `[` and `]`, and return `!parse(inner)`. To tackle `AND` is a little more complex, we loop through the string, keeping track of how many `[` and `]` we encounter. We add one to the counter when hitting `[` and remove one from the counter when hitting `]`. To make sure this works for nested brackets, we will take everything in-between the first `[` and the last `]`. We know when we are at the first and last when the count is equal to zero. Now we take his expression, and using a similar logic, split at the `,` at `depth=0`. Now we can split the `inner` by this comma and pass both `inner` parts back into the parse command, only returning true if both results are true. Let's see if it works:
+
+<video controls src="images/20250416-0456-59.0252236.mp4" title="Title"></video>
+
+Yay, it does!
+
+### Recursively Saving Gadgets
+Now I want to be able to build gadgets using my previously made gadgets. TO do this, we can use our previously made save function but now the swapping custom gadgets with their rules. This will result in one large statement that contains only `AND` and `NOT` commands.
 
 
 
 
 ## TODO
-Okay I'm leaving off at a point where I can click on a button that actives wiring mode. Once in wiring mode, the user can clikcon on itmes to begin a wire. The logic for this cascades from the simulation to the gadget. The next step would than be to:
+Okay I'm leaving off at a point where I can click on a button that actives wiring mode. Once in wiring mode, the user can click on on items to begin a wire. The logic for this cascades from the simulation to the gadget. The next step would than be to:
 - [ ] Allow the user to click on not an item to add a intermediate step in the wire.
 - [ ] When the user clicks a wire, remove it
 - [ ] Annoying to keep pressing wire mode.

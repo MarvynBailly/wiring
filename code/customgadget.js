@@ -40,22 +40,23 @@ class CustomGadget{
         // Recursively evaluate the expression
         function parse(expr) {
             // Evaluate NOT
-            expr = expr.replace(/NOT/g, (_, inner) => {
+            if (expr.startsWith('NOT')) {
+                let inner = expr.slice(4, -1); // Remove NOT[ and ]
                 return !parse(inner);
-            });
+            }
 
             // Evaluate AND
-            expr = expr.replace(/AND/g, (_, inner) => {
-                const parts = splitArgs(inner);
+            if (expr.startsWith('AND')) {
+                let inner = expr.slice(4, -1); // Remove AND[ and ]
+                let parts = splitArgs(inner);
                 return parts.every(parse);
-            });
-
+            }
             // Base case: just return the boolean
             if (expr.trim() === 'true') return true;
             if (expr.trim() === 'false') return false;
-
-            throw new Error("Invalid expression: " + expr);
         }
+
+
 
         // Split arguments on comma, but respect nested brackets
         function splitArgs(s) {
@@ -73,10 +74,7 @@ class CustomGadget{
             if (current) args.push(current.trim());
             return args;
         }
-
-        let res = parse(rule);
-        console.log("Rule: " + rule);
-        console.log("Result: " + res);
+        this.state = parse(rule);
     }
 
     update(){

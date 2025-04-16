@@ -82,27 +82,23 @@ class Gadget {
         let guy_before = output.start
         let name_of_guy_before = guy_before.name;
 
-        console.log("name_of_guy_before: " + name_of_guy_before);
-        console.log("code: " + code);
-
         if (name_of_guy_before == "input") {
-            console.log("input found: " );
             code = code.replace("_", "input" + guy_before.id);
-            console.log("replaced code: " + code);
-            
             return code;
         }
 
-        if (name_of_guy_before == "not") {
-            console.log("not found: " );
+        else if (name_of_guy_before == "not") {
             code = code.replace("_", "NOT[_]");
         }
 
-        if (name_of_guy_before == "and") {
-            console.log("and found: " );
+        else if (name_of_guy_before == "and") {
             code = code.replace("_", "AND[_,_]");
         }
-        console.log("replaced code: " + code);
+        // hit a custom gadget
+        else {
+            
+        
+        }
 
         for (let i = 0; i < guy_before.inputList.length; i++) {
             let input = output.start.inputList[i];
