@@ -1,7 +1,9 @@
 # Wiring
-I spend everyday working on telling computers how to solve problem and I would like to better understand how these machines work. To do so, I want to explore logic gates and their applications without having to buy a large bread board and wait for shipping if I need a piece that I don't have. So let's code a simulation to work on. 
+I spend everyday working on telling computers how to solve problem for me and I think its about time I better understand how these machines work. To do so, I want to explore logic gates and their applications without having to buy a large bread board and get stuck waiting for shipping when I unavoidably will be missing a piece. So let's code a simulation to work on. 
+
 ## Idea
-Create a simulation to work with logic gates. I want ot be able to save the layout as a module that can be used later on, for example a `and` gate. This will allow me to build complex ideas and better understand the core concepts behind computers.
+Create a simulation to work with logic gates. I want ot be able to save the layout as a module that can be used later on, for example a `or` gate. This will allow me to build complex ideas and better understand the core concepts behind computers. My current end goal is building a functional RAM gadget.
+
 ## Interactive Visualization
 Let's use good old Javascript. Let's set up a basic layout for us to work in. It's been a while since I've done this. I have a class called `Simulation` which will render the layout of the simulation. I want two boxes, one for the simulation to place in and a small box below it to have buttons. Next, I want a class `Gadget` which will be the information within each block. In each `Gadget`, I want to have a default layout with two inputs on the right and one output on the left. Next, I want these inputs to be clickable such that we can manually toggle the input of the gadget for testing. 
 
@@ -10,10 +12,12 @@ Let's use good old Javascript. Let's set up a basic layout for us to work in. It
 Great we have something working and is somewhat nice looking. Now let's go on a side quest and look into how to place nice wires.
 
 ## Wiring
-I find it very satisfying to create clean and organized wiring. I want to have the same effect in the simulation. Let's look into this more later.
-### Basic Wiring
-A very basic way to visualize this is to place a straight line between the input and the output of the wire. The wire's state matches the state of it's input. 
+I find it very satisfying to create clean and organized wiring. I want to have the same effect in the simulation.
 
+### Simple Wiring
+For now I will just connect gates using a straight line for the wire but let's come back to this later and us a spline!
+
+![alt text](images/image-3.png)
 
 ## Gates
 ### Basic "and" and "not" gates
@@ -32,7 +36,7 @@ Let's work on this "nand" gate example:
 ![alt text](images/image-1.png)
 
 ### Saving Gadget Format
-We have two inputs -> and -> not -> output. Let's chase the path from input to output for each input. I want this to be saved as `[*, *] > AND > NOT > [*]` or what if we do something like `AND[*, *]`? Let's try the second one. For now, let's assume that there is only one output. Let's start at the output, and on each step, look back. So for an `OR` gate:
+We have two inputs -> and -> not -> output. This is a `NAND` gate! I now want to save this as a custom gadget. The format that I've decided upon would read this `NAND` gate as a string of the form `AND[NOT[INPUT0],NOT[INPUT1]]`. For now, let's assume that there is only one output and two inputs. Let's start at the output, and on each step, look back. So for an `OR` gate:
 
 ```
 1. OUTPUT
@@ -43,7 +47,7 @@ We have two inputs -> and -> not -> output. Let's chase the path from input to o
 6. [NOT[INPUT1], NOT[INPUT2]] -> AND -> OUTPUT : "AND[NOT[INPUT1],NOT[INPUT2]]"
 ```
 
-So this is a recursive function with the termination condition checking if the type of the item is `input`.
+We can do this with a recursive function, terminating when the type of the item is `input`.
 
 ```
 1. OUTPUT
@@ -54,7 +58,7 @@ So this is a recursive function with the termination condition checking if the t
 - - 1 [NOT[INPUT1], NOT[INPUT2]] -> AND -> OUTPUT : "AND[NOT[INPUT1],NOT[INPUT2]]"
 ```
 
-Let's  write some pseudocode
+Let's  write some code to do this:
 ```
 simplify(output, code){
     let guy_before = output.start
@@ -89,7 +93,13 @@ simplify(output, code){
     return code;
 }
 ```
-Not the cleanest but gets the trick done! Now clicking 'Create' for the `NAND` get gives `NOT[AND[input1,input0]]`. Wonderful. Now let's add it to a `.txt` containing functions. 
+Not the cleanest but gets the trick done! Now clicking 'Create' for the `NAND` get gives `NOT[AND[input1,input0]]`. Wonderful. Now let's this string a pair `(name, command)` in a text file called `gadgets.txt`:
+
+```
+NAND NOT[AND[input1,input0]]
+OR NOT[AND[NOT[input1],NOT[input0]]]
+XOR NOT[AND[NOT[AND[NOT[input0],input1]],NOT[AND[input0,NOT[input1]]]]]
+```
 
 ### Loading Gadget Format
 Okay I've added the logic to load the gadgets in. How it works is when the user presses the `Load` button, the simulation reads the `gadgets.txt` file and loads in the `(gadget_name, gadget_rule)` pair. The simulation also gives all the details to the current gadget module. Now the simulation also creates now buttons for the user to click. I've also added a new class called `CustonGadget` which takes in the custom name and custom rule. Now we need to write function that takes the rule and returns a `0` or `1`.
@@ -160,6 +170,8 @@ Yay, it does!
 ### Recursively Saving Gadgets
 Now I want to be able to build gadgets using my previously made gadgets. TO do this, we can use our previously made save function but now the swapping custom gadgets with their rules. This will result in one large statement that contains only `AND` and `NOT` commands.
 
+### Custom Appearance
+
 
 
 
@@ -169,6 +181,9 @@ Okay I'm leaving off at a point where I can click on a button that actives wirin
 - [ ] When the user clicks a wire, remove it
 - [ ] Annoying to keep pressing wire mode.
 - [ ] Remove the hard corners
+- [ ] Have gadgets be able to save when they have custom gadgets within them.
+- [ ] Generalize everything to handle a general amount of inputs and outputs.
+- [ ] Customize the look of the gadgets to show how many inputs and ouputs there are. 
 - [ x ] Add an `and` gate. For now lets just add a gate that will take two inputs. We will add the actual logic later. This is just to be at a spot of basic wiring.
 - [ x ] If the user clicks on another item, complete the wire. This means, turn wiring_mode off for both the simulation and the gadget and add a new wire to the gadget. The logic for this should all be stored within the gadget class. 
 - [ x ] Add an output for the `and` gate.
