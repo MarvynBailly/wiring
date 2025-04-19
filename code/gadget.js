@@ -14,13 +14,15 @@ class Gadget {
 
         this.create_item_mode = false;
 
+        this.inputOffset = 40;
+
         this.setupDefaultSetup();
     }
     
     setupDefaultSetup() {
-        this.inputList.push(new Input(this.offset, 200, 0));
+        this.inputList.push(new Input(this.offset, windowHeight/2-this.inputOffset, 0));
         this.items.push(this.inputList[0]);
-        this.inputList.push(new Input(this.offset, 600, 1));
+        this.inputList.push(new Input(this.offset, windowHeight/2+this.inputOffset, 1));
         this.items.push(this.inputList[1]); 
 
         this.outputList.push(new Output(width - this.offset, 400));
@@ -96,8 +98,17 @@ class Gadget {
         }
         // hit a custom gadget
         else {
-            
-        
+            // find the number of inputs in the gadget
+            let num_inputs = guy_before.inputList.length;
+            console.log("Number of inputs", num_inputs);
+            let rule = guy_before.rule;
+            // replace the inputs with "_"
+            for (let i = 0; i < num_inputs; i++) {
+                let input = "input" + i;
+                console.log(input);
+                rule = rule.replace(input, "_");
+            }
+            code = code.replace("_", rule);
         }
 
         for (let i = 0; i < guy_before.inputList.length; i++) {
@@ -105,6 +116,26 @@ class Gadget {
             code = this.simplify(input, code);
         }
         return code;
+    }
+
+    placeInput() {
+        let x = this.offset;
+        let y = windowHeight / 2 + this.inputList.length * this.inputOffset;
+        let input = new Input(x, y, this.inputList.length);
+        this.items.push(input);
+        this.inputList.push(input);
+        this.create_item_mode = false;
+        sim.create_item_mode = false;
+    }
+
+    placeOutput() {
+        let x = windowWidth - this.offset;
+        let y = windowHeight / 2 + this.outputList.length * this.inputOffset;
+        let output = new Input(x, y);
+        this.items.push(output);
+        this.outputList.push(output);
+        this.create_item_mode = false;
+        sim.create_item_mode = false;
     }
 
     placeAnd(mx, my) { 

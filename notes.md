@@ -168,11 +168,42 @@ The algorithm takes in the command and calls two subfunctions, `parse` and `spli
 Yay, it does!
 
 ### Recursively Saving Gadgets
-Now I want to be able to build gadgets using my previously made gadgets. TO do this, we can use our previously made save function but now the swapping custom gadgets with their rules. This will result in one large statement that contains only `AND` and `NOT` commands.
+Now I want to be able to build gadgets using my previously made gadgets. TO do this, we can use our previously made save function but now the swapping custom gadgets with their rules. This will result in one large statement that contains only `AND` and `NOT` commands. Adding the following command to `gadget.simplify` does the trick:
+```
+// hit a custom gadget
+else {
+    // find the number of inputs in the gadget
+    let num_inputs = guy_before.inputList.length;
+    console.log("Number of inputs", num_inputs);
+    let rule = guy_before.rule;
+    // replace the inputs with "_"
+    for (let i = 0; i < num_inputs; i++) {
+        let input = "input" + i;
+        console.log(input);
+        rule = rule.replace(input, "_");
+    }
+    code = code.replace("_", rule);
+}
+```
+We take the rule of the custom gadget, that comprises of `AND` and `NOT` and add this to the string of commands. 
 
 ### Custom Appearance
+We will come back to this later.
 
+## Multiple Inputs and Outputs
+I've added buttons that allow the user to create more than one input and output. Now we need to make sure that our functions to save gadgets can handle this. Currently, I pass the first output into my `gadget.simplify` function which reduces the current set up to a string. Let's first focus on making sure this function can handle more than one input:
 
+![alt text](images/image-4.png)
+
+And running save yields `test AND[input2,AND[input0,input1]]` which seems correct! Let's see if it currently loads back in. And it works! Great, now to allow multiple outputs. I think this will require a slight modification of how we are saving the gadgets. Rather than having 
+```
+name rule
+```
+I will make it have
+```
+name [rule1, rule2, ..., rulen]
+```
+where each element of the array corresponds to an output.
 
 
 ## TODO

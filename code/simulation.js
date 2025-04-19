@@ -38,14 +38,20 @@ class Simulation {
         this.createWiring = createButton('Wire');
         this.createWiring.position(this.offset + 1*offset, height - this.height + 10);
 
+        this.createInput = createButton('Input');
+        this.createInput.position(this.offset + 2*offset, height - this.height + 10);
+
+        this.createOutput = createButton('Output');
+        this.createOutput.position(this.offset + 3*offset, height - this.height + 10);
+
         this.createLoad = createButton('Load');
-        this.createLoad.position(this.offset + 2*offset, height - this.height + 10);
+        this.createLoad.position(this.offset + 4*offset, height - this.height + 10);
 
         this.createAdd = createButton('And');
-        this.createAdd.position(this.offset + 3*offset, height - this.height + 10);
+        this.createAdd.position(this.offset + 5*offset, height - this.height + 10);
 
         this.createNot = createButton('Not');
-        this.createNot.position(this.offset + + 4*offset, height - this.height + 10);
+        this.createNot.position(this.offset + + 6*offset, height - this.height + 10);
     }
 
 
@@ -78,7 +84,7 @@ class Simulation {
         for (let i = 0; i < this.gadgetData.length; i++) {
             let gadget = this.gadgetData[i];
             let button = createButton(gadget.name);
-            button.position(this.offset + i * 65+5 * 65, height - this.height + 10);
+            button.position(this.offset + i * 65+7 * 65, height - this.height + 10);
             // when mouse pressed, print name of the button
             button.mousePressed(() => {
                 let name = button.html();
@@ -95,6 +101,13 @@ class Simulation {
     }
     
     runButtons() {
+        this.createInput.mousePressed(() => {
+            this.gadget.placeInput();
+        });
+
+        this.createOutput.mousePressed(() => {
+            this.gadget.placeOutput();
+        });
 
         this.createCreate.mousePressed(() => {
             // prompt the user for the name of the gadget
