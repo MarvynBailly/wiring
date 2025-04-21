@@ -1,14 +1,17 @@
 class CustomGadget{
-    constructor(x, y, name, rule){
+    constructor(x, y, rules, name){
         this.x = x;
         this.y = y;
         this.size = 40;
         this.color = color(random(255), random(255), random(255));
         this.name = name;
-        this.rule = rule;
-        this.state = false;
+        this.rules = [];
+        this.states = [];
         this.inputList = [];
         this.outputs = [];
+        this.numberOfOutputs = 0;
+
+        this.setupRules(rules);
     }
 
     addInput(input) {
@@ -25,17 +28,20 @@ class CustomGadget{
         this.outputs.push(wire);
     }
 
+    setupRules(rulesData) { 
+        let rules = rulesData.substring(1, rulesData.length - 1).split(";");
+        this.numberOfOutputs = rules.length;
+
+        for (let i = 0; i < rules.length; i++) {
+            this.rules.push(rules[i]);
+            this.states.push(false);
+        }
+    }
+    
     evaluateRule() {
-        if (this.inputList.length != 2) {
+        if (this.inputList.length != 2 || this.outputs.length != this.numberOfOutputs) { 
             return;
         }
-
-        // replace 0 and 1 with true and false
-        let input0 = this.inputList[0].state == 1 ? true : false;
-        let input1 = this.inputList[1].state == 1 ? true : false;   
-        
-        // replace this.rule input0 and input1 with the actual values
-        let rule = this.rule.replace(/input0/g, input0).replace(/input1/g, input1);
 
         // Recursively evaluate the expression
         function parse(expr) {
@@ -56,8 +62,6 @@ class CustomGadget{
             if (expr.trim() === 'false') return false;
         }
 
-
-
         // Split arguments on comma, but respect nested brackets
         function splitArgs(s) {
             let args = [], depth = 0, current = '';
@@ -74,7 +78,17 @@ class CustomGadget{
             if (current) args.push(current.trim());
             return args;
         }
-        this.state = parse(rule);
+
+        for (let i = 0; i < this.rules.length; i++) {
+            // replace 0 and 1 with true and false
+            let input0 = this.inputList[0].state == 1 ? true : false;
+            let input1 = this.inputList[1].state == 1 ? true : false;   
+            
+            // replace this.rule input0 and input1 with the actual values
+            let rule = this.rules[i].replace(/input0/g, input0).replace(/input1/g, input1);
+            
+            this.state[i] = parse(rule);
+        }
     }
 
     update(){

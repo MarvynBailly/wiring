@@ -203,7 +203,80 @@ I will make it have
 ```
 name [rule1, rule2, ..., rulen]
 ```
-where each element of the array corresponds to an output.
+where each element of the array corresponds to an output. And here we go:
+
+```
+this.createCreate.mousePressed(() => {
+    // prompt the user for the name of the gadget
+    let name = prompt("Enter the name of the gadget:");
+
+    let outputs = [];
+    for (let i = 0; i < this.gadget.outputList.length; i++) {
+        let output = sim.gadget.simplify(sim.gadget.outputList[i].inputList[0],"_");
+        outputs.push(output);
+    }
+    
+    let rule = "[";
+    for (let i = 0; i < outputs.length; i++) {
+        rule += outputs[i];
+        if (i < outputs.length - 1) {
+            rule += ",";
+        }
+    }
+    rule += "]";
+    let data = name + " " + rule;
+
+    // append the (name, output) to a text file gadgets.txt
+    // display data
+    alert(data);
+});
+```
+Running this function on this:
+
+![alt text](images/image-5.png)
+
+yields:
+
+```
+test [AND[input0,input1];AND[input0,input1]]    
+```
+
+Now we need to modify our `customgadget` object to be able to handle multiple outputs as well. In the `customgadget` we load in the outputs
+
+```
+setupRules(rulesData) { 
+    let rules = rulesData.substring(1, rulesData.length - 1).split(";");
+    this.numberOfOutputs = rules.length;
+
+    for (let i = 0; i < rules.length; i++) {
+        this.rules.push(rules[i]);
+    }
+}
+```
+
+and looping through our evaluation function 
+
+```
+evaluateRule() {
+    if (this.inputList.length != 2 || this.rules.length == 0 || this.outputList != this.numberOfOutputs) { 
+        return;
+    }
+    ...
+   for (let i = 0; i < this.rules.length; i++) {
+        // replace 0 and 1 with true and false
+        let input0 = this.inputList[0].state == 1 ? true : false;
+        let input1 = this.inputList[1].state == 1 ? true : false;   
+        
+        // replace this.rule input0 and input1 with the actual values
+        let rule = this.rules[i].replace(/input0/g, input0).replace(/input1/g, input1);
+                
+        this.state[i] = parse(rule);
+    }
+}
+```
+
+Okay now we need to change how the wire checks the state since it is used to looking for `state`.
+
 
 
 ## TODO

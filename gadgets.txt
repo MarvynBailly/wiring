@@ -1,3 +1,4 @@
 NAND NOT[AND[input1,input0]]
 OR NOT[AND[NOT[input1],NOT[input0]]]
 XOR NOT[AND[NOT[AND[NOT[input0],input1]],NOT[AND[input0,NOT[input1]]]]]
+test [AND[input0,input1];AND[input0,input1]]

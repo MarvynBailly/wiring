@@ -45,7 +45,10 @@ class Gadget {
         }
         // create a wire between the two items
         else{
-            let wire = new Wire(this.wire_start, item)
+            // NEED TO FIX THIS
+            let id = this.wires.length + 1;
+            console.log("Wire ID", id);
+            let wire = new Wire(this.wire_start, item, id)
             
             this.wires.push(wire);
 
@@ -131,7 +134,7 @@ class Gadget {
     placeOutput() {
         let x = windowWidth - this.offset;
         let y = windowHeight / 2 + this.outputList.length * this.inputOffset;
-        let output = new Input(x, y);
+        let output = new Output(x, y);
         this.items.push(output);
         this.outputList.push(output);
         this.create_item_mode = false;
@@ -154,7 +157,7 @@ class Gadget {
         // use gadget_name to loop up the gadget in the gadget array
         // save gadget rule
         let gadget_rule = this.gadget_array.find(g => g.name == gadget_name).output;
-        let gadget = new CustomGadget(mx, my, gadget_name, gadget_rule);
+        let gadget = new CustomGadget(mx, my, gadget_rule, gadget_name);
         this.items.push(gadget);
 
         this.create_item_mode = false;

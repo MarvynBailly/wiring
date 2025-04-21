@@ -78,8 +78,6 @@ class Simulation {
     }
 
     onGadgetsLoaded() {
-        console.log("Gadget data is ready!", this.gadgetData);
-
         // create an array of buttons for each gadget
         for (let i = 0; i < this.gadgetData.length; i++) {
             let gadget = this.gadgetData[i];
@@ -112,10 +110,24 @@ class Simulation {
         this.createCreate.mousePressed(() => {
             // prompt the user for the name of the gadget
             let name = prompt("Enter the name of the gadget:");
-            let output = sim.gadget.simplify(sim.gadget.outputList[0].inputList[0],"_");
+
+            let outputs = [];
+            for (let i = 0; i < this.gadget.outputList.length; i++) {
+                let output = sim.gadget.simplify(sim.gadget.outputList[i].inputList[0],"_");
+                outputs.push(output);
+            }
+            
+            let rule = "[";
+            for (let i = 0; i < outputs.length; i++) {
+                rule += outputs[i];
+                if (i < outputs.length - 1) {
+                    rule += ";";
+                }
+            }
+            rule += "]";
+            let data = name + " " + rule;
+
             // append the (name, output) to a text file gadgets.txt
-            let data = name + " " + output;
-            console.log(data);
             // display data
             alert(data);
         });
