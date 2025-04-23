@@ -10,13 +10,19 @@ class Wire {
 
 
     update(){
-        if(this.start.state){
-            this.state = true; 
-        }else if(!this.state.state){
-            this.state = false;
+        if(this.start.state != undefined){
+            if(this.start.state){
+                this.state = true; 
+            // }else if(!this.state.state){
+            }else{
+                this.state = false;
+            }
         }else{
-            
-            console.log("here");
+            if(this.start.states[this.stateId]){
+                this.state = true; 
+            }else{
+                this.state = false;
+            }
         }
     }
 

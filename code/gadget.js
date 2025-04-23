@@ -45,9 +45,7 @@ class Gadget {
         }
         // create a wire between the two items
         else{
-            // NEED TO FIX THIS
-            let id = this.wires.length + 1;
-            console.log("Wire ID", id);
+            let id = this.wire_start.outputs.length
             let wire = new Wire(this.wire_start, item, id)
             
             this.wires.push(wire);

@@ -86,8 +86,8 @@ class CustomGadget{
             
             // replace this.rule input0 and input1 with the actual values
             let rule = this.rules[i].replace(/input0/g, input0).replace(/input1/g, input1);
-            
-            this.state[i] = parse(rule);
+            this.states[i] = parse(rule);
+            // this.state = parse(rule);
         }
     }
 

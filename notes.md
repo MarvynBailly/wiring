@@ -275,7 +275,52 @@ evaluateRule() {
 }
 ```
 
-Okay now we need to change how the wire checks the state since it is used to looking for `state`.
+Okay now we need to change how the wire checks the state since it is used to looking for `state`. Okay so I've realized that my code is getting sloppy because I started off with the assumption that `AND` and `NOT` gates have one output. While this isn't false, in retrospect, I still should have make this an array of one boolean value rather than a boolean variable. I've work around this by having cases. One case is if a wire's parent doesn't have more than one output and the other case is if the parent does have more than one. In the latter case, I pass an index to the wire so that it knows which output in the array of boolean values it should check to determine its own state. This does the trick! Let's take a break from all this designing and start making some gadgets!
+
+
+## Binary Addition
+Let's make a binary adder! Let's think of adding two bits together. Let's run through what the truth table would be:
+
+$$
+\begin{array}{c|c|c|c}
+\text{in} 1 & \text{in } 2& \text{out} & \text{carry} \\
+\hline
+0 & 0 & 0 & 0 \\
+0 & 1 & 1 & 0 \\
+1 & 0 & 1 & 0 \\
+1 & 1 & 0 & 1 \\
+\end{array}
+$$
+Looking at the `out` label, notice this is the same as a `XOR`. Notice that the carry is given by an `AND`:
+![alt text](images/image-6.png) 
+
+This does the trick. Now to make this extendable, we need to allow an input to carry in. We can build the correct modification by looking at the previous output with the addition of a carry in. Let's first look when `carry in` is 1: 
+
+$$
+\begin{array}{c|c|c|c}
+\text{prev. out} & \text{carry in} & \text{out} & \text{carry out}\\
+\hline
+0 & 1 & 1 & 0\\
+1 & 1 & 0 & 1\\
+1 & 1 & 0 & 1\\
+0 & 1 & 1 & 1^*\\ 
+\hline
+0 & 0 & 0 & 0\\
+1 & 0 & 1 & 0\\
+1 & 0 & 1 & 0\\
+0 & 0 & 0 & 1^*\\ 
+\end{array}
+$$
+
+where the $1^*$ come from the previous truth table. Notice that `out` is now a `XOR` between the `prev. out` and `carry in`. To figure out `carry out`, we see that, `carry out` is a `AND` between the `carry in` and `out` `OR` a gate between `input 1` `and` `input 0`.Let's wire this up:
+
+![alt text](images/image-7.png)
+
+Oops.. 
+
+### Squash a bug
+
+When we add another wire to a `customGadget`, it does not point towards the correct outputs. I think we can fix this by checking if a custom gadget has a wire and if so, copy the object. This way, all new outputs will be the same. Hmm okay, I'm seeing the problem here, we don't always want this behavior. So I think we need to first visual our custom gates better. Let's add visual representation of the inputs and the outputs. This way the user can easily click the desired input/output. If the user clicks a output that has an existing wire, copy it. A somewhat easier way around this is to make wires clickable, and then we take the value off the wire. We want both but maybe let's just add the wire click, finish making the adder, and come back to make the gadgets look pretty. We also need to update the UI soon. 
 
 
 
