@@ -323,6 +323,14 @@ Oops..
 When we add another wire to a `customGadget`, it does not point towards the correct outputs. I think we can fix this by checking if a custom gadget has a wire and if so, copy the object. This way, all new outputs will be the same. Hmm okay, I'm seeing the problem here, we don't always want this behavior. So I think we need to first visual our custom gates better. Let's add visual representation of the inputs and the outputs. This way the user can easily click the desired input/output. If the user clicks a output that has an existing wire, copy it. A somewhat easier way around this is to make wires clickable, and then we take the value off the wire. We want both but maybe let's just add the wire click, finish making the adder, and come back to make the gadgets look pretty. We also need to update the UI soon. 
 
 
+#### Designing
+Never mind let's mess with how they look:
+
+![alt text](images/image-8.png)
+
+The number of inputs and outputs are adaptive to the number of inputs and outputs found in the `customgadget`'s rule. Got edge detection working: 
+
+<video controls src="images/20250424-0538-16.0883793.mp4" title="Title"></video>
 
 ## TODO
 Okay I'm leaving off at a point where I can click on a button that actives wiring mode. Once in wiring mode, the user can click on on items to begin a wire. The logic for this cascades from the simulation to the gadget. The next step would than be to:
@@ -331,9 +339,9 @@ Okay I'm leaving off at a point where I can click on a button that actives wirin
 - [ ] Annoying to keep pressing wire mode.
 - [ ] Remove the hard corners
 - [ ] Have gadgets be able to save when they have custom gadgets within them.
-- [ ] Generalize everything to handle a general amount of inputs and outputs.
 - [ ] Customize the look of the gadgets to show how many inputs and ouputs there are. 
-- [ x ] Add an `and` gate. For now lets just add a gate that will take two inputs. We will add the actual logic later. This is just to be at a spot of basic wiring.
-- [ x ] If the user clicks on another item, complete the wire. This means, turn wiring_mode off for both the simulation and the gadget and add a new wire to the gadget. The logic for this should all be stored within the gadget class. 
-- [ x ] Add an output for the `and` gate.
-- [ x ] Add correct logic for inputs, `and` gates, and outputs.
+- [x] Generalize everything to handle a general amount of inputs and outputs.
+- [x] Add an `and` gate. For now lets just add a gate that will take two inputs. We will add the actual logic later. This is just to be at a spot of basic wiring.
+- [x] If the user clicks on another item, complete the wire. This means, turn wiring_mode off for both the simulation and the gadget and add a new wire to the gadget. The logic for this should all be stored within the gadget class. 
+- [x] Add an output for the `and` gate.
+- [x] Add correct logic for inputs, `and` gates, and outputs.

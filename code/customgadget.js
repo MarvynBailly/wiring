@@ -2,7 +2,6 @@ class CustomGadget{
     constructor(x, y, rules, name){
         this.x = x;
         this.y = y;
-        this.size = 40;
         this.color = color(random(255), random(255), random(255));
         this.name = name;
         this.rules = [];
@@ -10,8 +9,15 @@ class CustomGadget{
         this.inputList = [];
         this.outputs = [];
         this.numberOfOutputs = 0;
+        this.numberOfInputs = 0;
 
+        this.input_hover = [];
+        this.output_hover = [];
+        
         this.setupRules(rules);
+        
+        this.size = 40 + this.numberOfInputs * 3.5 + this.numberOfOutputs * 3.5;
+        this.size = constrain(this.size, 40, 80);
     }
 
     addInput(input) {
@@ -32,9 +38,29 @@ class CustomGadget{
         let rules = rulesData.substring(1, rulesData.length - 1).split(";");
         this.numberOfOutputs = rules.length;
 
+        // count the number of inputs in the rules
+        this.numberOfInputs = 0;
+        for (let i = 0; i < rules.length; i++) {
+            let rule = rules[i].trim();
+            console.log("rule: " + rule);
+            let input_name = "input" + this.numberOfInputs;
+            while (rule.includes(input_name)) {
+                this.numberOfInputs++;
+                input_name = "input" + this.numberOfInputs;
+            }
+        }   
+        for (let i = 0; i < this.numberOfInputs; i++) {
+            this.input_hover.push(false);
+        }
+
+
+        console.log("Number of inputs: " + this.numberOfInputs);
+        
+
         for (let i = 0; i < rules.length; i++) {
             this.rules.push(rules[i]);
             this.states.push(false);
+            this.output_hover.push(false);
         }
     }
     
@@ -91,8 +117,51 @@ class CustomGadget{
         }
     }
 
+    checkInputHover(){
+        let n = this.numberOfInputs;
+        let h = this.size / (n);
+
+        for (let i = 0; i < n; i++) {
+            let xOffset = this.x - this.size;
+            let yOffset = this.y - this.size / 2 + h * i;
+            // rect(xOffset,yOffset + h/2 - this.size/8, this.size / 2, this.size / 4);
+            let input_rect_top_left_x =  xOffset;
+            let input_rect_top_left_y =  yOffset + h/2 - this.size/8;
+            if (mouseX > input_rect_top_left_x && mouseX < input_rect_top_left_x + this.size / 2 && mouseY > input_rect_top_left_y && mouseY < input_rect_top_left_y + this.size / 4) {
+                // return i;
+                this.input_hover[i] = true;
+            }else {
+                this.input_hover[i] = false;
+            }
+        }
+
+
+        n = this.numberOfOutputs;
+        h = this.size / (n);
+
+        
+        for (let i = 0; i < n; i++) {
+            let xOffset = this.x + this.size / 2;
+            let yOffset = this.y - this.size / 2 + h * i;
+            // rect(xOffset,yOffset + h/2 - this.size/8, this.size / 2, this.size / 4);
+            // rect(xOffset,yOffset + h/2 - this.size/8, this.size / 2, this.size / 4);
+            let output_rect_top_left_x =  xOffset;
+            let output_rect_top_left_y =  yOffset + h/2 - this.size/8;
+            if (mouseX > output_rect_top_left_x && mouseX < output_rect_top_left_x + this.size / 2 && mouseY > output_rect_top_left_y && mouseY < output_rect_top_left_y + this.size / 4) {
+                // return i;
+                this.output_hover[i] = true;
+            } else {
+                this.output_hover[i] = false;
+            }
+        }
+
+
+    }
+
+
     update(){
         this.evaluateRule();
+        this.checkInputHover();
     }
 
 
@@ -100,9 +169,51 @@ class CustomGadget{
     render() {
         stroke(0, 0, 0);
         fill(this.color);
+        rect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
         circle(this.x, this.y, this.size);
-        // add the name to the center of the circle
+        fill(200, 200, 200);
+        stroke(0, 0, 0);
+        let n = this.numberOfOutputs;
+        
+        let h = this.size / (n);
+
+        for (let i = 0; i < n; i++) {
+            let xOffset = this.x + this.size / 2;
+            let yOffset = this.y - this.size / 2 + h * i;
+            if (this.output_hover[i]) {
+                fill(255, 0, 0);
+            }
+            else {
+                fill(200, 200, 200);
+            }
+            rect(xOffset,yOffset + h/2 - this.size/8, this.size / 2, this.size / 4);
+        }
+
+        n = this.numberOfInputs;
+        h = this.size / (n);
+
+        for (let i = 0; i < n; i++) {
+            let xOffset = this.x - this.size;
+            let yOffset = this.y - this.size / 2 + h * i;
+            if (this.input_hover[i]) {
+                fill(255, 0, 0);
+            }
+            else {
+                fill(200, 200, 200);
+            }
+            rect(xOffset,yOffset + h/2 - this.size/8, this.size / 2, this.size / 4);
+        }
+        
+
+
+        // rect(xOffset, yOffset + this.size/2, this.size / 2  , this.size / 4);
+        // rect(xOffset, yOffset + this.size, this.size / 2  , this.size / 4);
+        // rect(xOffset, yOffset + this.size/2, this.size / 2  , this.size / 4);
+
+
+
         fill(0, 0, 0);
+        // add the name to the center
         textSize(12);
         textAlign(CENTER, CENTER);
         text(this.name, this.x, this.y);
