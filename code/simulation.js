@@ -172,13 +172,15 @@ class Simulation {
 function mousePressed() {
     // wiring mode
     if (sim.wiring_mode){
+        if(sim.gadget.wiring_mode){
+            sim.gadget.checkGadgets(mouseX, mouseY);
+        }       
         sim.gadget.checkWireStart(mouseX, mouseY);
     }
     
     // create item mode
     else{
         sim.gadget.toggleInputs(mouseX, mouseY);
-
 
         if (sim.gadget.create_item_mode) {
             if(sim.create_item_type == "and"){

@@ -158,6 +158,24 @@ class CustomGadget{
 
     }
 
+    checkInput(mx, my) {
+        for (let input of this.input_hover) {
+            if (input) {
+                return true;
+            }
+        }
+
+
+    }
+
+
+    checkToggle(mx, my) { 
+        if (this.checkInput(mx, my)){
+            return true 
+        }
+    }
+
+
 
     update(){
         this.evaluateRule();
