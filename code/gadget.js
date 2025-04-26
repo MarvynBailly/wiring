@@ -38,15 +38,17 @@ class Gadget {
         }
     }
     
-    wire_logic(item) {        
+    wire_logic(item, pos = null) {        
         if (!this.wiring_mode) {
             this.wiring_mode = true;
             this.wire_start = item;   
         }
         // create a wire between the two items
         else{
+            console.log("HWREER")
             let id = this.wire_start.outputs.length
-            let wire = new Wire(this.wire_start, item, id)
+            let start = createVector(item.x, item.y);
+            let wire = new Wire(this.wire_start, item, id, pos, start)
             
             this.wires.push(wire);
 
@@ -76,6 +78,16 @@ class Gadget {
         }
     }
 
+    getToggleCoords() {
+        for (let item of this.items) {
+            if(item.isHovering == true){
+                pos = item.getHoverCoords();
+                return pos;
+            }   
+        }
+    
+    }
+
     checkGadgets(mx, my) {
         for (let gadget of this.items) { 
             if (gadget.name != "input" 
@@ -83,10 +95,10 @@ class Gadget {
                 && gadget.name != "not"
                 && gadget.name != "and") {
                     if(gadget.checkToggle(mx, my)){
-                        pos = gadget.getToggleCoords();
+                        let pos = gadget.getToggleCoords();
                         /// continue working here. Need to add this function to get the position of the input that was clicked. Then I place the end of the wire at this point.
                         /// Next thing to do is add the same logic to the outputs. This process will be slightly different since we need to check the starting position. This could be done by modifying the function that gets called when the gadget is clicked. Now we only add a wire when one of the output_hover is true. Then we can use the same process as the inputs.
-                        this.wire_logic(gadget);
+                        this.wire_logic(gadget, pos);
                     }
             }
         }
@@ -170,6 +182,7 @@ class Gadget {
     placeCustomGadget(mx, my, gadget_name){
         // use gadget_name to loop up the gadget in the gadget array
         // save gadget rule
+        
         let gadget_rule = this.gadget_array.find(g => g.name == gadget_name).output;
         let gadget = new CustomGadget(mx, my, gadget_rule, gadget_name);
         this.items.push(gadget);

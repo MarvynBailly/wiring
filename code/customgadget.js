@@ -22,7 +22,7 @@ class CustomGadget{
 
     addInput(input) {
         // change this in the future to allow more than 2 inputs
-        if (this.inputList.length == 2) {
+        if (this.inputList.length == this.numberOfInputs) {
             console.log("Max inputs reached");
             return;
         }
@@ -32,6 +32,14 @@ class CustomGadget{
 
     addOutput(wire) {
         this.outputs.push(wire);
+    }
+
+    getInputStates() {
+        let states = [];
+        for (let i = 0; i < this.inputList.length; i++) {
+            states.push(this.inputList[i].state);
+        }
+        return states;
     }
 
     setupRules(rulesData) { 
@@ -116,6 +124,51 @@ class CustomGadget{
             // this.state = parse(rule);
         }
     }
+
+    isHovering(){
+        for (let i = 0; i < this.input_hover.length; i++) {
+            if (this.input_hover[i]) {
+                return true;
+            }
+        }
+        for (let i = 0; i < this.output_hover.length; i++) {
+            if (this.output_hover[i]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    getToggleCoords(){
+        let active_index = -1;
+        for (let i = 0; i < this.input_hover.length; i++) {
+            if (this.input_hover[i]) {
+                active_index = i;
+                break;
+            }
+        }
+        console.log("active index: " + active_index);
+
+        // for (let i = 0; i < n; i++) {
+        //     let xOffset = this.x - this.size;
+        //     let yOffset = this.y - this.size / 2 + h * i;
+        //     if (this.input_hover[i]) {
+        //         fill(255, 0, 0);
+        //     }
+        //     else {
+        //         fill(200, 200, 200);
+        //     }
+        //     rect(xOffset,yOffset + h/2 - this.size/8, this.size / 2, this.size / 4);
+        // }
+        let xOffset = this.x - this.size;
+        let yOffset = this.y - this.size / 2 + this.size / (this.numberOfInputs) * active_index;
+        
+        let input_center_x = xOffset + this.size / 4;
+        let input_center_y = yOffset + this.size / 8;
+        let input_center = createVector(input_center_x, input_center_y);
+        return input_center;
+    }
+
 
     checkInputHover(){
         let n = this.numberOfInputs;
