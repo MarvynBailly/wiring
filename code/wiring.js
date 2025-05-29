@@ -1,11 +1,13 @@
 class Wire { 
-    constructor(start, end, id) {
+    constructor(start, start_pos, end, end_pos, id) {
         this.start = start;
         this.end = end;
         this.color_off = color(0, 0, 0);
         this.color_on = color(0, 255, 0);
         this.state = false;
         this.stateId = id;
+        this.start_pos = start_pos;
+        this.end_pos = end_pos;
     }
 
 
@@ -28,6 +30,6 @@ class Wire {
 
     render() {
         stroke(this.state ? this.color_on : this.color_off);
-        line(this.start.x, this.start.y, this.end.x, this.end.y);
+        line(this.start_pos.x, this.start_pos.y, this.end_pos.x, this.end_pos.y);
     }
 }

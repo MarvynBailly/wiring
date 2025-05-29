@@ -1,3 +1,9 @@
+///////////////////////////
+// Custom Gadget Class
+// handles the logic for placing user defined gadgets
+// the update function is called from gadget.js
+///////////////////////////
+
 class CustomGadget{
     constructor(x, y, rules, name){
         this.x = x;
@@ -117,10 +123,14 @@ class CustomGadget{
         }
     }
 
+
+    // check if the mouse is hovering over any of the inputs
+    // loops over inputs and outputs and checks if the mouse is hovering over any of them
+    // changes the *_hover array to be true if the mouse is hovering over the input or output
     checkInputHover(){
+        // inputs loop
         let n = this.numberOfInputs;
         let h = this.size / (n);
-
         for (let i = 0; i < n; i++) {
             let xOffset = this.x - this.size;
             let yOffset = this.y - this.size / 2 + h * i;
@@ -135,11 +145,9 @@ class CustomGadget{
             }
         }
 
-
+        // output loop
         n = this.numberOfOutputs;
         h = this.size / (n);
-
-        
         for (let i = 0; i < n; i++) {
             let xOffset = this.x + this.size / 2;
             let yOffset = this.y - this.size / 2 + h * i;
@@ -154,26 +162,50 @@ class CustomGadget{
                 this.output_hover[i] = false;
             }
         }
-
-
     }
 
+    
+    
+    
+    // check if the mouse is hovering over any of the inputs
+    // returns true if the mouse is hovering over any of the inputs
+    checkToggle(mx, my) { 
+        if (this.checkInput(mx, my)){
+            return true 
+        }
+    }
+    
     checkInput(mx, my) {
         for (let input of this.input_hover) {
             if (input) {
                 return true;
             }
         }
-
-
     }
 
-
-    checkToggle(mx, my) { 
-        if (this.checkInput(mx, my)){
-            return true 
+    checkOutput(mx, my) {
+        for (let output of this.output_hover) {
+            if (output) {
+                return true;
+            }
         }
     }
+
+
+    
+    // function to get the active input coords
+    // returns the x,y coords of the left middle of the input box corresponding to the index of the active input
+    getActiveInputCoords() {
+        for (let i = 0; i < this.input_hover.length; i++) {
+            if (this.input_hover[i]) {
+                let xOffset = this.x - this.size;
+                let yOffset = this.y - this.size / 2 + (this.size / this.numberOfInputs) * i;
+                return createVector(xOffset, yOffset + (this.size / this.numberOfInputs) / 2);
+            }
+        }
+        return null;
+    }
+
 
 
 

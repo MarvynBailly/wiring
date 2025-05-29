@@ -332,6 +332,16 @@ The number of inputs and outputs are adaptive to the number of inputs and output
 
 <video controls src="images/20250424-0538-16.0883793.mp4" title="Title"></video>
 
+## Returning to the Project
+It has been a month or so since I've worked on this project last. Trying to get back into the project shows me how much spaghetti code I've written. It is super hard to follow and understand what is going on. Rather than re-writing the program, I'm going to take some time to organize and comment my code. Every time I edit a function, I want to make sure that I add comments about what the function is doing. For classes, I want to keep track of where the main loop is being called from. This should help make the code more readable and flow slightly better.
+
+### Finishing Wiring
+#### Input Logic
+I've added so that the wire correctly links up with input that the mouse is hovering over:
+![alt text](images/image-9.png)
+
+
+
 ## TODO
 Okay I'm leaving off at a point where I can click on a button that actives wiring mode. Once in wiring mode, the user can click on on items to begin a wire. The logic for this cascades from the simulation to the gadget. The next step would than be to:
 - [ ] Allow the user to click on not an item to add a intermediate step in the wire.

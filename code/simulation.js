@@ -1,3 +1,8 @@
+///////////////////////////
+// Simulation Class
+// handles the layout and buttons for the simulation
+// the run function is called from the main.js
+///////////////////////////
 class Simulation {
     constructor(height, offset) {
         this.height = height;
@@ -11,24 +16,20 @@ class Simulation {
         this.gadgetData = [];
         this.gadgetArray = [];
 
+        // create the new gadget for the user to work with
         this.gadget = new Gadget(height, offset, "Test Gadget");
 
+        // get gadget data from gadgets.txt
         this.loadGadgetData();
+        // set up the buttons
         this.setupButtons();
     }
 
-
-    renderLayout() {
-        stroke(0,0,0);
-        fill(180, 180, 180);
-        rect(0, 0, width, height - this.height);
-        fill(this.background_color);
-        rect(this.offset, this.offset, width-2*this.offset, height - this.height-2*this.offset);
-        fill(180, 180, 180);
-        rect(0, height - this.height, width, this.height);
-    }
+    ///////////////////////////
+    // Buttons
+    ///////////////////////////
     
-
+    // setup the buttons for the simulation
     setupButtons() {
         let offset = 65;
         
@@ -54,50 +55,7 @@ class Simulation {
         this.createNot.position(this.offset + + 6*offset, height - this.height + 10);
     }
 
-
-    loadGadgetData() {
-        loadStrings("gadgets.txt", this.processGadgetData.bind(this));
-    }
-
-    processGadgetData(data) {
-        console.log("File loaded:", data);
-        this.gadgetData = [];  // reset in case we reload
-        sim.gadget.gadget_array = []; // reset the gadget array
-
-        for (let i = 0; i < data.length; i++) {
-            let line = data[i].trim().split(" ");
-            let name = line[0];
-            let output = line[1];
-            // console.log(name, output);
-
-            this.gadgetData.push({ name, output });
-        }
-
-        // OPTIONAL: Trigger anything now that data is ready
-        this.onGadgetsLoaded();
-    }
-
-    onGadgetsLoaded() {
-        // create an array of buttons for each gadget
-        for (let i = 0; i < this.gadgetData.length; i++) {
-            let gadget = this.gadgetData[i];
-            let button = createButton(gadget.name);
-            button.position(this.offset + i * 65+7 * 65, height - this.height + 10);
-            // when mouse pressed, print name of the button
-            button.mousePressed(() => {
-                let name = button.html();
-                this.create_item_mode = !this.create_item_mode;
-                this.create_item_type = name;
-            });
-
-
-            // save the instructions to the gadget array
-            // don't save all of the gadgets, just the ones that we need.
-            let data = {name : gadget.name, output: gadget.output};
-            sim.gadget.gadget_array.push(data);
-        }
-    }
-    
+    // buttons logic
     runButtons() {
         this.createInput.mousePressed(() => {
             this.gadget.placeInput();
@@ -160,22 +118,98 @@ class Simulation {
 
     }
 
+    ///////////////////////////
+    // Gadget 
+    ///////////////////////////
+
+    // load the gadget data from gadgets.txt
+    loadGadgetData() {
+        loadStrings("gadgets.txt", this.processGadgetData.bind(this));
+    }
+
+    // process the gadget data
+    processGadgetData(data) {
+        console.log("File loaded:", data);
+        this.gadgetData = [];  // reset in case we reload
+        sim.gadget.gadget_array = []; // reset the gadget array
+
+        for (let i = 0; i < data.length; i++) {
+            let line = data[i].trim().split(" ");
+            let name = line[0];
+            let output = line[1];
+            // console.log(name, output);
+
+            this.gadgetData.push({ name, output });
+        }
+
+        // OPTIONAL: Trigger anything now that data is ready
+        this.onGadgetsLoaded();
+    }
+
+    onGadgetsLoaded() {
+        // create an array of buttons for each gadget
+        for (let i = 0; i < this.gadgetData.length; i++) {
+            let gadget = this.gadgetData[i];
+            let button = createButton(gadget.name);
+            button.position(this.offset + i * 65+7 * 65, height - this.height + 10);
+            // when mouse pressed, print name of the button
+            button.mousePressed(() => {
+                let name = button.html();
+                this.create_item_mode = !this.create_item_mode;
+                this.create_item_type = name;
+            });
+
+
+            // save the instructions to the gadget array
+            // don't save all of the gadgets, just the ones that we need.
+            let data = {name : gadget.name, output: gadget.output};
+            sim.gadget.gadget_array.push(data);
+        }
+    }
+
+
+    //////////////////////////////
+    // Main
+    //////////////////////////////
+
+    // render the layout of the simulation
+    renderLayout() {
+        stroke(0,0,0);
+        fill(180, 180, 180);
+        rect(0, 0, width, height - this.height);
+        fill(this.background_color);
+        rect(this.offset, this.offset, width-2*this.offset, height - this.height-2*this.offset);
+        fill(180, 180, 180);
+        rect(0, height - this.height, width, this.height);
+    }
+
+    // main run function
     run() {
         this.renderLayout();
         this.runButtons();
+
+        // update the gadget
         this.gadget.run();
     }
 }
 
 
+///////////////////////////
+// Mouse Pressed Function
+// handles mouse interactions
+///////////////////////////
 
 function mousePressed() {
     // wiring mode
     if (sim.wiring_mode){
+        // if we are in wiring mode and have already clicked a wire, look to place the ending
         if(sim.gadget.wiring_mode){
-            sim.gadget.checkGadgets(mouseX, mouseY);
-        }       
-        sim.gadget.checkWireStart(mouseX, mouseY);
+            sim.gadget.checkWireEnd(mouseX, mouseY);
+        }
+        // if we are in wiring mode and have not clicked a wire, look to start a wire
+        else{
+            sim.gadget.checkWireStart(mouseX, mouseY);
+        }
     }
     
     // create item mode
