@@ -328,7 +328,7 @@ Never mind let's mess with how they look:
 
 ![alt text](images/image-8.png)
 
-The number of inputs and outputs are adaptive to the number of inputs and outputs found in the `customgadget`'s rule. Got edge detection working: 
+The number of inputs and outputs are adaptive to the number of inputs and outputs found in the `customgadget`'s rule. Got edge detection working:
 
 <video controls src="images/20250424-0538-16.0883793.mp4" title="Title"></video>
 

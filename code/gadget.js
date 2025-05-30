@@ -66,6 +66,7 @@ class Gadget {
         }
         // create a wire between the two items
         else{
+            console.log("HWREER")
             let id = this.wire_start.outputs.length
             // wire goes only this direction
             // could cause potential issue or confusion
@@ -208,6 +209,7 @@ class Gadget {
     placeCustomGadget(mx, my, gadget_name){
         // use gadget_name to loop up the gadget in the gadget array
         // save gadget rule
+        
         let gadget_rule = this.gadget_array.find(g => g.name == gadget_name).output;
         let gadget = new CustomGadget(mx, my, gadget_rule, gadget_name);
         this.items.push(gadget);

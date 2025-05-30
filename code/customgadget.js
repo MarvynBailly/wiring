@@ -28,7 +28,7 @@ class CustomGadget{
 
     addInput(input) {
         // change this in the future to allow more than 2 inputs
-        if (this.inputList.length == 2) {
+        if (this.inputList.length == this.numberOfInputs) {
             console.log("Max inputs reached");
             return;
         }
@@ -38,6 +38,14 @@ class CustomGadget{
 
     addOutput(wire) {
         this.outputs.push(wire);
+    }
+
+    getInputStates() {
+        let states = [];
+        for (let i = 0; i < this.inputList.length; i++) {
+            states.push(this.inputList[i].state);
+        }
+        return states;
     }
 
     setupRules(rulesData) { 
