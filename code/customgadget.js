@@ -201,9 +201,12 @@ class CustomGadget{
 
 
     
-    // function to get the active input coords
+    // function to get the active coords 
+    // it will check for either the inputs or the outputs
     // returns the x,y coords of the left middle of the input box corresponding to the index of the active input
-    getActiveInputCoords() {
+    // returns the x,y coords of the output if that is active
+    getActiveCoords() {
+        // check the inputs first
         for (let i = 0; i < this.input_hover.length; i++) {
             if (this.input_hover[i]) {
                 let xOffset = this.x - this.size;
@@ -211,6 +214,15 @@ class CustomGadget{
                 return createVector(xOffset, yOffset + (this.size / this.numberOfInputs) / 2);
             }
         }
+
+        for (let i = 0; i < this.output_hover.length; i++) {
+            if (this.output_hover[i]) {
+                let xOffset = this.x + this.size;
+                let yOffset = this.y - this.size / 2 + (this.size / this.numberOfOutputs) * i;
+                return createVector(xOffset, yOffset + (this.size / this.numberOfOutputs) / 2);
+            }
+        }
+
         return null;
     }
 

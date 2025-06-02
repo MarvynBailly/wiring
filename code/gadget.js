@@ -15,6 +15,8 @@ class Gadget {
 
         this.wiring_mode = false;
         this.wires = [];
+        this.wire_start_item;
+        this.wire_start_pos;
 
         this.gadget_array = [];
 
@@ -51,7 +53,8 @@ class Gadget {
         // for creating a wire start for an item with outputs, we should check if the mouse is over the output area of the item rather than the item itself
         for (let item of this.items) {
             if (this.item_clicked(item, mx, my)) {
-                this.create_wire(item);
+                const pos = item.getActiveCoords(mx, my);
+                this.create_wire(item, pos);
             }
         }
     }
@@ -66,16 +69,19 @@ class Gadget {
         }
         // create a wire between the two items
         else{
-            console.log("HWREER")
-            let id = this.wire_start.outputs.length
+            let id = this.wire_start_item.outputs.length
             // wire goes only this direction
             // could cause potential issue or confusion
-            let wire = new Wire(this.wire_start, this.wire_start_pos, item, pos, id)
+            console.log("Creating wire from: ", this.wire_start_item.name, " to: ", item.name);
+            let wire = new Wire(this.wire_start_item, this.wire_start_pos, item, pos, id)
             
+            // add the wire to the wires array
             this.wires.push(wire);
 
+            // add the wire to the input of the end item
             item.addInput(wire);
-            this.wire_start.addOutput(wire);
+            // add the wire to the output of the start item
+            this.wire_start_item.addOutput(wire);
             
             this.wiring_mode = false;
             sim.wiring_mode = false;
@@ -87,7 +93,7 @@ class Gadget {
         for (let gadget of this.items) {
             if (gadget instanceof CustomGadget) { 
                 if(gadget.checkToggle(mx, my)){
-                    let pos = gadget.getActiveInputCoords();
+                    let pos = gadget.getActiveCoords();
 
 
                     /// Next thing to do is add the same logic to the outputs. This process will be slightly different since we need to check the starting position. This could be done by modifying the function that gets called when the gadget is clicked. Now we only add a wire when one of the output_hover is true. Then we can use the same process as the inputs.
@@ -227,7 +233,7 @@ class Gadget {
         
         // wire logic
         if (this.wiring_mode) {
-            this.renderWire(this.wire_start, createVector(mouseX, mouseY));   
+            this.renderWire(this.wire_start_pos, createVector(mouseX, mouseY));   
         }
         
         // render loop
