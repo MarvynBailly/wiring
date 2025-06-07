@@ -340,6 +340,18 @@ It has been a month or so since I've worked on this project last. Trying to get 
 I've added so that the wire correctly links up with input that the mouse is hovering over:
 ![alt text](images/image-9.png)
 
+I've spent sometime rethinking the wiring function. I have it so that the wire will only be added to the input/output when the mouse is hovering over these. I also worked on the logic for connecting custom items together. I still need to make sure that the input that is clicked, corresponds to that input location in the logic of the custom gadget. I also have to make inputs, outputs, AND, and NOT gates align with this new set up.
+
+Okay I got the input and output wiring logic working. This means that we just need to make sure that the clicked input and output of an item correspond with its position in the logic. I've figured this out before but overwrote it. So let's double check how I did that. Finally we need to add all this logic to AND and NOT gates. Eventually we need to turn all of these into custom items.
+
+Okay got AND gate working.
+
+
+
+
+
+
+
 
 
 ## TODO

@@ -91,7 +91,7 @@ class Gadget {
     // a function to handle placing the end of the wire
     checkWireEnd(mx, my) {
         for (let gadget of this.items) {
-            if (gadget instanceof CustomGadget) { 
+            // if (gadget instanceof CustomGadget) { 
                 if(gadget.checkToggle(mx, my)){
                     let pos = gadget.getActiveCoords();
 
@@ -99,7 +99,7 @@ class Gadget {
                     /// Next thing to do is add the same logic to the outputs. This process will be slightly different since we need to check the starting position. This could be done by modifying the function that gets called when the gadget is clicked. Now we only add a wire when one of the output_hover is true. Then we can use the same process as the inputs.
                     this.create_wire(gadget, pos);
                 }
-            }
+            // }
         }
     }
 
@@ -107,7 +107,7 @@ class Gadget {
     // if the item is a custom gadget, we need to check if the mouse is over the input/output area of the gadget
     item_clicked(item, mx, my) {
         // if item has outputs, check output
-        if (item instanceof CustomGadget) {
+        // if (item instanceof CustomGadget) {
             // check if mouse is over the input area of the gadget
             if (item.checkInput(mx, my)) {
                 console.log("Input clicked");
@@ -118,10 +118,10 @@ class Gadget {
                 console.log("Output clicked");
                 return true;
             }
-        }else{
-            const d = dist(mx, my, item.x, item.y);
-            return d < item.size / 2;
-        }
+        // }else{
+        //     const d = dist(mx, my, item.x, item.y);
+        //     return d < item.size / 2;
+        // }
     }
 
     renderWire(start, end) {

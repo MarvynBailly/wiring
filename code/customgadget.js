@@ -14,6 +14,7 @@ class CustomGadget{
         this.states = [];
         this.inputList = [];
         this.outputs = [];
+        
         this.numberOfOutputs = 0;
         this.numberOfInputs = 0;
 
@@ -135,7 +136,7 @@ class CustomGadget{
     // check if the mouse is hovering over any of the inputs
     // loops over inputs and outputs and checks if the mouse is hovering over any of them
     // changes the *_hover array to be true if the mouse is hovering over the input or output
-    checkInputHover(){
+    checkHover(){
         // inputs loop
         let n = this.numberOfInputs;
         let h = this.size / (n);
@@ -231,20 +232,22 @@ class CustomGadget{
 
     update(){
         this.evaluateRule();
-        this.checkInputHover();
+        this.checkHover();
     }
 
 
-
+    // render the gadget, inputs, and outputs
+    // we have that inputs and outputs are colored differently when the mouse is hovering over them
+    // we should make this only happen when we are in wiring mode.
     render() {
         stroke(0, 0, 0);
         fill(this.color);
         rect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
-        circle(this.x, this.y, this.size);
+        // circle(this.x, this.y, this.size);
         fill(200, 200, 200);
         stroke(0, 0, 0);
+
         let n = this.numberOfOutputs;
-        
         let h = this.size / (n);
 
         for (let i = 0; i < n; i++) {
