@@ -80,7 +80,8 @@ class CustomGadget{
     }
     
     evaluateRule() {
-        if (this.inputList.length != 2 || this.outputs.length != this.numberOfOutputs) { 
+        if (this.inputList.length != this.numberOfInputs || this.outputs.length != this.numberOfOutputs) { 
+            console.error("CustomGadget: Incorrect number of inputs or outputs. Inputs: " + this.inputList.length + ", Outputs: " + this.outputs.length);
             return;
         }
 
@@ -173,7 +174,24 @@ class CustomGadget{
         }
     }
 
-    
+    // function to loop through the inputs and outputs and return the id of the active input or output
+    getActiveHoverId(){
+        // check the inputs first
+        for (let i = 0; i < this.input_hover.length; i++) {
+            if (this.input_hover[i]) {
+                return i
+            }
+        }
+
+        // check the outputs
+        for (let i = 0; i < this.output_hover.length; i++) {
+            if (this.output_hover[i]) {
+                return i;
+            }
+        }
+
+        return null; // no active input or output
+    }    
     
     
     // check if the mouse is hovering over any of the inputs

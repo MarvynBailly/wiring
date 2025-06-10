@@ -14,6 +14,15 @@ class Input {
         this.output_hover = false; 
     }
     
+    getActiveHoverId(){
+        // check the outputs
+        if (this.output_hover) {
+            return 0;
+        }
+
+        return null; // no active input or output
+    }    
+
     clicked(mx, my) {
         const d = dist(mx, my, this.x, this.y);
         return d < this.size / 2;

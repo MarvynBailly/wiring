@@ -66,14 +66,17 @@ class Gadget {
             this.wiring_mode = true;
             this.wire_start_item = item;
             this.wire_start_pos = pos;   
+            this.wire_start_id = item.getActiveHoverId();
         }
         // create a wire between the two items
         else{
-            let id = this.wire_start_item.outputs.length
+            let id = item.getActiveHoverId();
+            // id = wire_start_item.outputs.length;
+            console.log("Creating wire with id: ", id);
             // wire goes only this direction
             // could cause potential issue or confusion
             console.log("Creating wire from: ", this.wire_start_item.name, " to: ", item.name);
-            let wire = new Wire(this.wire_start_item, this.wire_start_pos, item, pos, id)
+            let wire = new Wire(this.wire_start_item, this.wire_start_pos, this.wire_start_id, item, pos, id)
             
             // add the wire to the wires array
             this.wires.push(wire);

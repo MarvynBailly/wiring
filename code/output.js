@@ -25,6 +25,16 @@ class Output {
         }
     }
     
+    getActiveHoverId(){
+        // check the inputs first
+        if (this.input_hover) {
+            return 0;
+        }
+
+        return null; // no active input or output
+    }    
+
+
     checkHover(){
         // inputs loop
         let h = this.size;

@@ -1,5 +1,5 @@
 class Wire { 
-    constructor(start, start_pos, end, end_pos, id) {
+    constructor(start, start_pos, start_id, end, end_pos, id) {
         this.start = start;
         this.end = end;
         this.color_off = color(0, 0, 0);
@@ -19,7 +19,8 @@ class Wire {
             }else{
                 this.state = false;
             }
-        }else{
+        }
+        else{
             if(this.start.states[this.stateId]){
                 this.state = true; 
             }else{

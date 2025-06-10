@@ -29,6 +29,24 @@ class notGate {
     addOutput(wire) {
         this.outputs.push(wire);
     }
+    
+    getActiveHoverId(){
+        // check the inputs first
+        for (let i = 0; i < this.input_hover.length; i++) {
+            if (this.input_hover[i]) {
+                return i
+            }
+        }
+
+        // check the outputs
+        for (let i = 0; i < this.output_hover.length; i++) {
+            if (this.output_hover[i]) {
+                return i;
+            }
+        }
+
+        return null; // no active input or output
+    }    
 
         // check if the mouse is hovering over any of the inputs
     // loops over inputs and outputs and checks if the mouse is hovering over any of them
